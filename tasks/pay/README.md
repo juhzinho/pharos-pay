@@ -14,4 +14,4 @@ npm run pay -- --from 0x15dDce897D76ac39c188AdE4D353711A60395315 send 1 USDC to 
 npm run pay -- manda 1 USDC
 ```
 
-Live page: https://pharos-pay.vercel.app
+Live page: https://pharos-pay-ten.vercel.app
