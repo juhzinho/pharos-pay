@@ -31,7 +31,7 @@
     .dock { background: rgba(16,12,8,.62); border: 1px solid var(--line); border-radius: 28px; padding: 16px; max-height: calc(100vh - 112px); display: flex; flex-direction: column; overflow: hidden; backdrop-filter: blur(18px); box-shadow: 0 24px 70px rgba(0,0,0,.35); animation: rise .9s .08s cubic-bezier(.16,.8,.2,1) both; }
     .chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .chips button, input, button { font: inherit; color: var(--ink); }
-    .chips button { border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--muted); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+    .chips button { border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--muted); border-radius: 999px; padding: 8px 12px; cursor: pointer; overflow-wrap: anywhere; text-align: left; }
     label { display: block; margin: 10px 0 4px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
     input { width: 100%; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: rgba(8,6,4,.55); }
     .log { overflow: auto; display: flex; flex-direction: column; gap: 10px; margin: 12px 0; max-height: min(46vh, 520px); }

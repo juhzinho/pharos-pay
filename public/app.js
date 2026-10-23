@@ -2,6 +2,11 @@ import { setMode } from "./scene.js";
 
 const FROM = "0x15dDce897D76ac39c188AdE4D353711A60395315";
 const DEAD = "0x000000000000000000000000000000000000dEaD";
+const PAY_EN = `send 1 USDC to ${DEAD}`;
+const SHORT_EN = `send 999999999999 USDC to ${DEAD}`;
+const PAY_PT = `manda 1 USDC para ${DEAD}`;
+const SHORT_PT = `manda 999999999999 USDC para ${DEAD}`;
+const ASK = "manda 1 USDC";
 const I = {
   en: {
     kicker: "Pacific · chain 1672 · unsigned",
@@ -12,9 +17,9 @@ const I = {
     wait: "Reading the chain…",
     you: "You",
     chips: {
-      pay: "send 1 USDC",
-      ask: "manda 1 USDC",
-      short: "send too much",
+      pay: PAY_EN,
+      ask: ASK,
+      short: SHORT_EN,
     },
     unsigned: "Unsigned transaction",
     sign: "Wallet request · not sent",
@@ -27,7 +32,7 @@ const I = {
     go: "Preparar",
     wait: "Lendo a rede…",
     you: "Você",
-    chips: { pay: "manda 1 USDC para…", ask: "manda 1 USDC", short: "manda demais" },
+    chips: { pay: PAY_PT, ask: ASK, short: SHORT_PT },
     unsigned: "Transação sem assinatura",
     sign: "Pedido da carteira · não enviado",
   },
@@ -35,15 +40,15 @@ const I = {
 function example(kind) {
   if (lang === "pt") {
     return {
-      pay: { text: `manda 1 USDC para ${DEAD}`, from: FROM },
-      ask: { text: "manda 1 USDC", from: FROM },
-      short: { text: `manda 999999999999 USDC para ${DEAD}`, from: FROM },
+      pay: { text: PAY_PT, from: FROM },
+      ask: { text: ASK, from: FROM },
+      short: { text: SHORT_PT, from: FROM },
     }[kind];
   }
   return {
-    pay: { text: `send 1 USDC to ${DEAD}`, from: FROM },
-    ask: { text: "manda 1 USDC", from: FROM },
-    short: { text: `send 999999999999 USDC to ${DEAD}`, from: FROM },
+    pay: { text: PAY_EN, from: FROM },
+    ask: { text: ASK, from: FROM },
+    short: { text: SHORT_EN, from: FROM },
   }[kind];
 }
 let lang = localStorage.getItem("pharos-lang") === "pt" ? "pt" : "en";
