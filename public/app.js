@@ -111,13 +111,11 @@ $("form").addEventListener("submit", (event) => {
 $("chips").addEventListener("click", (event) => {
   const button = event.target.closest("[data-ex]");
   if (!button) return;
-  if ($("go").disabled) return;
   const row = example(button.dataset.ex);
   pending = { amount: "", token: "", to: "" };
   $("from").value = row.from;
-  bubble("you", row.text);
-  $("text").value = "";
-  send(row.text);
+  $("text").value = row.text;
+  $("text").focus();
 });
 document.querySelectorAll("[data-lang]").forEach((button) => {
   button.addEventListener("click", () => { lang = button.dataset.lang; localStorage.setItem("pharos-lang", lang); apply(); });
