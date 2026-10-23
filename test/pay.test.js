@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { followUp, normalizeAmount, parsePayment } from "../lib/parse.js";
-import { bufferedGas, expectedAfter } from "../lib/pay.js";
+import { bufferedGas, expectedAfter, maxNativeAmount, signingRequestOf } from "../lib/pay.js";
+import { PACIFIC } from "../lib/tokens.js";
 
 const TO = "0x000000000000000000000000000000000000dEaD";
 const FROM = "0x15dDce897D76ac39c188AdE4D353711A60395315";
@@ -81,6 +82,67 @@ test("digits in a short hex blob are not the amount", () => {
   const parsed = parsePayment("send 0x1234 USDC");
   assert.equal(parsed.amount, "");
   assert.equal(parsed.token, "USDC");
+});
+
+test("the brief sentence asks for a real address and keeps the amount", () => {
+  const parsed = parsePayment("send 100 USDC to alice.eth");
+  assert.equal(parsed.amount, "100");
+  assert.equal(parsed.token, "USDC");
+  assert.equal(parsed.ens, "alice.eth");
+  assert.equal(parsed.to, "");
+  assert.match(followUp(parsed, "en"), /100 USDC/);
+  const next = parsePayment(TO, { amount: parsed.amount, token: parsed.token, to: parsed.to });
+  assert.equal(next.amount, "100");
+  assert.equal(next.token, "USDC");
+  assert.equal(next.to, TO);
+  assert.equal(next.ens, "");
+  assert.deepEqual(next.missing, []);
+});
+
+test("plain words resolve the recipient without guessing a second address", () => {
+  assert.equal(parsePayment("send me 1 USDC").to, "self");
+  assert.equal(parsePayment("manda 1 USDC para o endereço de queima").to, "burn");
+  assert.equal(parsePayment(`send 1 USDC to ${TO}`).to, TO);
+});
+
+test("all and a spelled amount are amounts", () => {
+  assert.equal(parsePayment(`send all USDC to ${TO}`).amount, "max");
+  assert.equal(parsePayment(`send one hundred USDC to ${TO}`).amount, "100");
+  assert.equal(parsePayment("send 1,000.50 USDC to " + TO).amount, "1000.50");
+  assert.equal(parsePayment("send 100 dollars to " + TO).usd, true);
+  assert.equal(parsePayment("send 100 dollars to " + TO).token, "");
+});
+
+test("a token contract in the sentence is the token, not a second recipient", () => {
+  const parsed = parsePayment(`send 1 ${PACIFIC.USDC.address} to ${TO}`);
+  assert.equal(parsed.token, "USDC");
+  assert.equal(parsed.to, TO);
+  assert.equal(parsed.ambiguous, "");
+});
+
+test("a short 0x is rejected as an address", () => {
+  const parsed = parsePayment("send 1 USDC to 0x1234");
+  assert.equal(parsed.to, "");
+  assert.match(followUp(parsed, "en"), /40 hex/);
+});
+
+test("the wallet request carries the same payment and is not a broadcast", () => {
+  const req = signingRequestOf({
+    chainId: 1672,
+    from: FROM,
+    to: TO,
+    data: "0x",
+    value: "0x1",
+    gas: "0x6270",
+    gasPrice: "0x2540be400",
+    nonce: 3,
+  });
+  assert.equal(req.method, "eth_sendTransaction");
+  assert.equal(req.params[0].chainId, "0x688");
+  assert.equal(req.params[0].nonce, "0x3");
+  assert.equal(req.params[0].to, TO);
+  assert.equal(maxNativeAmount(100_000n, 21_000n, 1n), 74_800n);
+  assert.equal(maxNativeAmount(1_000n, 21_000n, 1n), null);
 });
 
 test("a transfer to the same wallet only spends the fee", () => {

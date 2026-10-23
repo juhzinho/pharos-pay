@@ -16,6 +16,7 @@ try {
   console.log(report.headline);
   for (const line of report.lines || []) console.log(line);
   if (report.unsigned) console.log(JSON.stringify(report.unsigned));
+  if (report.signingRequest) console.log(JSON.stringify(report.signingRequest));
   console.log(`\ncalls ${summarizeCalls(takeCallLog(client))}`);
 } finally {
   await client.close().catch(() => {});

@@ -28,20 +28,21 @@
     .kicker { margin: 0 0 10px; letter-spacing: .18em; text-transform: uppercase; font-size: 12px; color: var(--gold); }
     h1 { margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 560; font-style: italic; font-size: clamp(52px, 7vw, 88px); line-height: .92; }
     .lead { color: var(--muted); max-width: 36ch; }
-    .dock { background: rgba(16,12,8,.62); border: 1px solid var(--line); border-radius: 28px; padding: 16px; max-height: calc(100vh - 112px); display: flex; flex-direction: column; backdrop-filter: blur(18px); box-shadow: 0 24px 70px rgba(0,0,0,.35); animation: rise .9s .08s cubic-bezier(.16,.8,.2,1) both; }
+    .dock { background: rgba(16,12,8,.62); border: 1px solid var(--line); border-radius: 28px; padding: 16px; max-height: calc(100vh - 112px); display: flex; flex-direction: column; overflow: hidden; backdrop-filter: blur(18px); box-shadow: 0 24px 70px rgba(0,0,0,.35); animation: rise .9s .08s cubic-bezier(.16,.8,.2,1) both; }
     .chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .chips button, input, button { font: inherit; color: var(--ink); }
     .chips button { border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--muted); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
     label { display: block; margin: 10px 0 4px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
     input { width: 100%; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: rgba(8,6,4,.55); }
-    .log { overflow: auto; display: flex; flex-direction: column; gap: 10px; margin: 12px 0; min-height: 120px; }
+    .log { overflow: auto; display: flex; flex-direction: column; gap: 10px; margin: 12px 0; max-height: min(46vh, 520px); }
     .msg { animation: rise .45s cubic-bezier(.16,.8,.2,1) both; }
     .msg b { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
     .msg.you b { color: var(--mint); }
     .msg p { margin: 2px 0; }
     .detail { display: grid; gap: 6px; color: var(--muted); font-size: 14px; }
-    .detail span { overflow-wrap: anywhere; }
-    code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; word-break: break-all; color: #f6efe2; }
+    .detail span, .detail code { overflow-wrap: anywhere; }
+    .tag { letter-spacing: .12em; text-transform: uppercase; font-size: 11px; color: var(--gold); }
+    code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; word-break: break-all; white-space: pre-wrap; color: #f6efe2; }
     .row { display: flex; gap: 8px; }
     .row input { flex: 1; }
     .btn { border: 0; border-radius: 999px; padding: 12px 16px; background: var(--gold); color: #2a2116; font-weight: 600; cursor: pointer; }

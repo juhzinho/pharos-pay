@@ -13,9 +13,11 @@ const I = {
     you: "You",
     chips: {
       pay: "send 1 USDC",
-      ask: "manda 1 USDC",
+      ask: "send 100 USDC to alice.eth",
       short: "send too much",
     },
+    unsigned: "Unsigned transaction",
+    sign: "Wallet request · not sent",
   },
   pt: {
     kicker: "Pacific · chain 1672 · sem assinatura",
@@ -25,20 +27,22 @@ const I = {
     go: "Preparar",
     wait: "Lendo a rede…",
     you: "Você",
-    chips: { pay: "manda 1 USDC para…", ask: "manda 1 USDC", short: "manda demais" },
+    chips: { pay: "manda 1 USDC para…", ask: "manda 100 USDC para alice.eth", short: "manda demais" },
+    unsigned: "Transação sem assinatura",
+    sign: "Pedido da carteira · não enviado",
   },
 };
 function example(kind) {
   if (lang === "pt") {
     return {
       pay: { text: `manda 1 USDC para ${DEAD}`, from: FROM },
-      ask: { text: "manda 1 USDC", from: FROM },
+      ask: { text: "manda 100 USDC para alice.eth", from: FROM },
       short: { text: `manda 999999999999 USDC para ${DEAD}`, from: FROM },
     }[kind];
   }
   return {
     pay: { text: `send 1 USDC to ${DEAD}`, from: FROM },
-    ask: { text: "manda 1 USDC", from: FROM },
+    ask: { text: "send 100 USDC to alice.eth", from: FROM },
     short: { text: `send 999999999999 USDC to ${DEAD}`, from: FROM },
   }[kind];
 }
@@ -81,8 +85,10 @@ async function send(text) {
     if (!res.ok || data.ok === false) throw new Error(data.error || res.statusText);
     pending = data.pending || { amount: "", token: "", to: "" };
     const lines = (data.lines || []).map((line) => `<span>${esc(line)}</span>`).join("");
-    const raw = data.unsigned ? `<code>${esc(JSON.stringify(data.unsigned))}</code>` : "";
-    bubble("pay", data.headline, `<div class="detail">${lines}${raw}</div>`);
+    const raw = data.unsigned ? `<span class="tag">${esc(I[lang].unsigned)}</span><code>${esc(JSON.stringify(data.unsigned, null, 2))}</code>` : "";
+    const sign = data.signingRequest ? `<span class="tag">${esc(I[lang].sign)}</span><code>${esc(JSON.stringify(data.signingRequest, null, 2))}</code>` : "";
+    bubble("pay", data.headline, `<div class="detail">${lines}${raw}${sign}</div>`);
+    $("text").placeholder = data.question || (lang === "pt" ? "manda 1 USDC para 0x…" : "send 1 USDC to 0x…");
     setMode(data.ready ? "pass" : data.question ? "ask" : "stop");
   } catch (error) {
     bubble("pay", error.message);
@@ -105,11 +111,13 @@ $("form").addEventListener("submit", (event) => {
 $("chips").addEventListener("click", (event) => {
   const button = event.target.closest("[data-ex]");
   if (!button) return;
+  if ($("go").disabled) return;
   const row = example(button.dataset.ex);
   pending = { amount: "", token: "", to: "" };
   $("from").value = row.from;
-  $("text").value = row.text;
-  apply();
+  bubble("you", row.text);
+  $("text").value = "";
+  send(row.text);
 });
 document.querySelectorAll("[data-lang]").forEach((button) => {
   button.addEventListener("click", () => { lang = button.dataset.lang; localStorage.setItem("pharos-lang", lang); apply(); });
