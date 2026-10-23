@@ -13,7 +13,7 @@ const I = {
     you: "You",
     chips: {
       pay: "send 1 USDC",
-      ask: "send 100 USDC to alice.eth",
+      ask: "manda 1 USDC",
       short: "send too much",
     },
     unsigned: "Unsigned transaction",
@@ -27,7 +27,7 @@ const I = {
     go: "Preparar",
     wait: "Lendo a rede…",
     you: "Você",
-    chips: { pay: "manda 1 USDC para…", ask: "manda 100 USDC para alice.eth", short: "manda demais" },
+    chips: { pay: "manda 1 USDC para…", ask: "manda 1 USDC", short: "manda demais" },
     unsigned: "Transação sem assinatura",
     sign: "Pedido da carteira · não enviado",
   },
@@ -36,13 +36,13 @@ function example(kind) {
   if (lang === "pt") {
     return {
       pay: { text: `manda 1 USDC para ${DEAD}`, from: FROM },
-      ask: { text: "manda 100 USDC para alice.eth", from: FROM },
+      ask: { text: "manda 1 USDC", from: FROM },
       short: { text: `manda 999999999999 USDC para ${DEAD}`, from: FROM },
     }[kind];
   }
   return {
     pay: { text: `send 1 USDC to ${DEAD}`, from: FROM },
-    ask: { text: "send 100 USDC to alice.eth", from: FROM },
+    ask: { text: "manda 1 USDC", from: FROM },
     short: { text: `send 999999999999 USDC to ${DEAD}`, from: FROM },
   }[kind];
 }
